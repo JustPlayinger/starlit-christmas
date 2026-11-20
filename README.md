@@ -1,5 +1,33 @@
 # 星愿 · Starlit Christmas
 
+## Windows 桌面悬浮模式
+
+透明背景、无边框、始终置顶。粒子直接叠加在编辑器等应用上方，鼠标穿透，可以继续点击、输入和滚动下方应用；不显示黑色底板或任务栏窗口。右下角系统托盘提供控制菜单。
+
+安装 Python 3.10+ 后，在本目录运行：
+
+```sh
+python -m pip install -r requirements.txt
+python overlay.py
+```
+
+也可双击 `launch_overlay.pyw`（需系统的 Python 文件关联指向已安装 PySide6 的环境）。
+
+- `Ctrl+Alt+Shift+R`：重播开场。
+- `Ctrl+Alt+Shift+B`：星光绽放。
+- `Ctrl+Alt+Shift+H`：隐藏 / 显示。
+- `Ctrl+Alt+Shift+Q`：退出。
+
+默认位于主屏幕右侧。可以指定尺寸、位置、屏幕、配色与祝福：
+
+```sh
+python overlay.py --width 760 --height 900 --x 900 --y 80 --theme gold --wish "愿所有美好，如期而至"
+```
+
+位置与尺寸使用逻辑像素；`--screen 1` 选择第二块屏幕。悬浮模式的快捷键是全局快捷键，操作时无需离开编辑器；若快捷键被其他软件占用，请使用系统托盘菜单。退出后会释放快捷键。
+
+## 浏览器模式
+
 零依赖的实时 WebGL 粒子圣诞树。双击 `index.html`，用 Chrome 或 Edge 打开即可，无需安装依赖或联网。需要浏览器支持 WebGL 并启用硬件加速。
 
 - 金色立体粒子圣诞树、螺旋灯带、五角星光晕、飘雪、地面星环。

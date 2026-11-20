@@ -17,8 +17,10 @@
 <div id="fallback">此浏览器未能启用 WebGL。<br>请用开启硬件加速的 Chrome 或 Edge 打开本文件。</div>
 <script>
 'use strict';
+const overlayMode=new URLSearchParams(location.search).get('overlay')==='1';
+if(overlayMode){document.documentElement.style.background='transparent';document.body.style.background='transparent';document.querySelector('.tools').style.display='none';document.querySelector('.hint').style.display='none';}
 const canvas=document.querySelector('#scene'),copy=document.querySelector('#copy'),ctx=copy.getContext('2d');
-const gl=canvas.getContext('webgl',{alpha:false,antialias:false,preserveDrawingBuffer:true});
+const gl=canvas.getContext('webgl',{alpha:overlayMode,antialias:false,preserveDrawingBuffer:true});
 if(!gl){document.querySelector('#fallback').style.display='block';throw new Error('WebGL unavailable');}
 const vs=`
 attribute vec3 aPos;attribute vec3 aMeta;
@@ -93,7 +95,7 @@ for(let ring=0;ring<3;ring++)for(let i=0;i<900;i++){
 for(let i=0;i<500;i++)add((random()-.5)*18,(random()-.5)*12,-5-random()*5,5,1+random()*3);
 for(const [name,data] of [['aPos',positions],['aMeta',meta]]){const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);const a=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,3,gl.FLOAT,false,0,0);}
 const uniforms={};for(const n of ['uTime','uAspect','uIntro','uBurst','uDpr','uPointer','uIce'])uniforms[n]=gl.getUniformLocation(program,n);
-gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.clearColor(.008,.017,.031,1);
+gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);if(overlayMode)gl.clearColor(0,0,0,0);else gl.clearColor(.008,.017,.031,1);
 let start=performance.now(),burstAt=-100,paused=false,lastTime=0,pauseAt=0,ice=false,wish='愿所有美好，如期而至',pointer=[0,0],recorder=null,recordCanvas=null,recordCtx=null,recordStart=0,recordStream=null,exporting=false,previousClean=false;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function resize(){const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(innerWidth*d);canvas.height=Math.round(innerHeight*d);copy.width=canvas.width;copy.height=canvas.height;gl.viewport(0,0,canvas.width,canvas.height);}
